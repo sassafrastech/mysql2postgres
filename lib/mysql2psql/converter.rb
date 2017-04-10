@@ -35,6 +35,7 @@ class Mysql2psql
       end
 
       tables.each do |table|
+        puts "Writing DDL for #{table.name}"
         writer.write_table(table)
       end unless @suppress_ddl
 
@@ -50,10 +51,13 @@ class Mysql2psql
         end
 
         tables.each do |table|
+          puts "Writing data for #{table.name}"
           writer.write_contents(table, reader)
         end
 
       end
+
+      puts "Writing indices and constraints"
 
       tables.each do |table|
         writer.write_indexes(table)
@@ -67,6 +71,8 @@ class Mysql2psql
       if @clear_schema
         writer.clear_schema
       end
+
+      puts "Inputting dump file #{writer.filename}"
 
       writer.inload
 
